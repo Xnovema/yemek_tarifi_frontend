@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarif Detayı - Lezzet Dünyası</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; padding-top: 80px; }
+        .details-container { 
+            max-width: 800px; 
+            margin: auto; 
+            background: white; 
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+        }
+        .recipe-img { 
+            width: 100%; 
+            max-height: 450px; 
+            object-fit: cover; 
+            border-radius: 15px; 
+            margin-bottom: 25px; 
+        }
+        .badge-cat { background-color: #ff6b35; margin-bottom: 10px; }
+        .description-text { line-height: 1.8; color: #444; white-space: pre-line; }
+        .author-section {
+            background: #fff3e0;
+            padding: 10px 15px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">Anasayfa</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="favorites.html">Beğenilenler</a></li>
+                    <li class="nav-item"><a class="nav-link" href="add-food.html">EKLEME KISMI</a></li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="404.html">Admin Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="add-product.html">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="details-container" id="details-content">
+            <p class="text-center">Tarif yükleniyor...</p>
+        </div>
+        <div class="text-center mt-4 mb-5">
+            <a href="index.html" class="btn btn-outline-secondary">⬅️ Anasayfaya Dön</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const recipeId = urlParams.get('id');
+
+            // Kategoriler
+            const categories = [
+                { id: 1, name: 'Ana Yemekler' },
+                { id: 2, name: 'Tatlılar' },
+                { id: 3, name: 'Kahvaltılık' }
+            ];
+
+            // Statik ve Yerel Verileri Birleştir
+            const staticProducts = [{ 
+                id: 101, 
+                name: 'Örnek Yemek', 
+                author: 'Sistem', 
+                categoryId: 1, 
+                description: 'Bu bir örnek tariftir.', 
+                image: 'https://via.placeholder.com/300' 
+            }];
+            
+            const localRecipes = JSON.parse(localStorage.getItem('myRecipes')) || [];
+            const allProducts = [...staticProducts, ...localRecipes];
+
+            // İlgili Tarifi Bul
+            const recipe = allProducts.find(p => p.id == recipeId);
+            const contentDiv = document.getElementById('details-content');
+
+            if (recipe) {
+                // Kategori ismini bul
+                const categoryObj = categories.find(c => c.id == recipe.categoryId);
+                const categoryName = categoryObj ? categoryObj.name : "Genel";
+
+                contentDiv.innerHTML = `
+                    <div class="mb-3">
+                        <span class="badge bg-warning text-dark">Tarif</span>
+                        <span class="badge bg-info text-dark">${categoryName}</span> 
+                    </div>
+                    
+                    <h1 class="display-5 fw-bold mb-1">${recipe.name}</h1>
+                    
+                    <div class="author-section shadow-sm">
+                        <span class="text-muted">👨‍🍳 Hazırlayan:</span> 
+                        <span class="fw-bold text-dark">${recipe.author || 'Anonim Şef'}</span>
+                    </div>
+
+                    <hr>
+                    
+                    <img src="${recipe.image}" class="recipe-img img-fluid shadow-sm" alt="${recipe.name}">
+                    
+                    <div class="mt-4">
+                        <h3 class="fw-bold text-primary">Hazırlanışı</h3>
+                        <p class="description-text" style="font-size: 1.15rem;">${recipe.description}</p>
+                    </div>
+                `;
+            } else {
+                contentDiv.innerHTML = `
+                    <div class="text-center py-5">
+                        <h2 class="text-danger">Tarif bulunamadı!</h2>
+                        <p class="text-muted">Aradığınız tarif silinmiş veya taşınmış olabilir.</p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

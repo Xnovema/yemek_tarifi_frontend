@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yeni Tarif Ekle - Lezzet Dünyası</title>
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f7f6; padding-top: 50px; }
+        .recipe-card {
+            max-width: 600px;
+            margin: auto;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: white;
+            padding: 30px;
+        }
+        .btn-submit {
+            background-color: #ff6b35;
+            color: white;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: bold;
+            border: none;
+            width: 100%;
+        }
+        .btn-submit:hover { background-color: #e85a2a; color: white; }
+        .image-preview {
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            overflow: hidden;
+            background-color: #fafafa;
+        }
+        .image-preview img { width: 100%; height: 100%; object-fit: cover; }
+    </style>
+</head>
+<body>
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">Anasayfa</a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNav">
+      <ul class="navbar-nav">
+       
+        <li class="nav-item">
+          <a class="nav-link" href="/favorites.html">Beğenilenler</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/add-food.html">EKLEME KISMI</a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav">
+       <li class="nav-item">
+          <a class="nav-link" href="/404.html">Admin Products</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/add-product.html">Login</a>
+        </li>
+ 
+      </ul>
+    </div>
+  </div>
+</nav>
+    <div class="container">
+        <div class="recipe-card">
+            <h2 class="text-center mb-4">Yeni Tarif Ekle</h2>
+            <form id="recipeForm">
+                <div class="mb-3">
+                    <label for="recipeName" class="form-label">Yemek Adı</label>
+                    <input type="text" class="form-control" id="recipeName" required placeholder="Örn: Karnıyarık">
+                </div>
+
+                <div class="mb-3">
+                     <label for="authorName" class="form-label">Hazırlayan (Yazar)</label>
+                      <input type="text" class="form-control" id="authorName" required placeholder="Adınız ve Soyadınız">
+                </div>
+                <div class="mb-3">
+                    <label for="categoryid" class="form-label">Kategori</label>
+                    <select class="form-select" id="categoryid" required>
+                        <option value="" selected disabled>Kategori Seçin</option>
+                        <option value="1">Ana Yemekler</option>
+                        <option value="2">Tatlılar</option>
+                        <option value="3">Kahvaltılık</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Yemek Resmi</label>
+                    <div class="image-preview" id="imagePreview">
+                        <span class="text-muted">Resim Seçilmedi</span>
+                    </div>
+                    <input type="file" class="form-control" id="recipeImage" accept="image/*" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Tarif Detayı</label>
+                    <textarea class="form-control" id="description" rows="4" required placeholder="Hazırlanış aşamalarını yazın..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">Tarifi Yayınla</button>
+                <div class="text-center mt-3">
+                    <a href="index.html" class="text-decoration-none text-muted">Vazgeç ve Geri Dön</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+
+    // 1. Resim Önizleme ve Base64'e Çevirme
+    const recipeImageInput = document.getElementById('recipeImage');
+    const imagePreview = document.getElementById('imagePreview');
+    let base64Image = "";
+
+    recipeImageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                imagePreview.innerHTML = `<img src="${event.target.result}" style="max-width:100%; border-radius:10px;">`;
+                base64Image = event.target.result; // Resmi hafızaya al
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // 2. Form Kaydetme ve Yönlendirme
+    document.getElementById('recipeForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // --- GÜNCEL KISIM: Verileri Formdan Al ---
+        const name = document.getElementById('recipeName').value;
+        // Eğer inputun id'si farklıysa burayı ona göre düzelt (Örn: 'author')
+        const author = document.getElementById('authorName').value; 
+        const categoryId = document.getElementById('categoryid').value;
+        const description = document.getElementById('description').value;
+
+        // --- GÜNCEL KISIM: Yeni Obje Oluştur ---
+        const newRecipe = {
+            id: Date.now(), // Benzersiz kimlik
+            name: name,
+            author: author, // <--- Eksik olan anahtar buydu, şimdi eklendi!
+            categoryId: parseInt(categoryId),
+            description: description,
+            image: base64Image || 'https://via.placeholder.com/300',
+            price: "Tarif"
+        };
+
+        try {
+            // LocalStorage işlemleri
+            let recipes = JSON.parse(localStorage.getItem('myRecipes')) || [];
+            recipes.push(newRecipe);
+            localStorage.setItem('myRecipes', JSON.stringify(recipes));
+
+            alert('Tarif başarıyla eklendi! Ana sayfaya yönlendiriliyorsunuz.');
+            
+            // Yönlendirme
+            window.location.href = "index.html"; 
+
+        } catch (error) {
+            console.error("Kayıt hatası:", error);
+            alert("Bir hata oluştu. Tarayıcı depolama alanı dolmuş olabilir.");
+        }
+    });
+
+    </script>
+</body>
+</html>

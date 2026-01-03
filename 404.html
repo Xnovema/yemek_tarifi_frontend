@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Çok Yakında - Erken Erişim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff6b35;
+            --secondary-color: #2d3436;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: radial-gradient(circle, #ffffff 0%, #dfe6e9 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        /* Arka plandaki yüzen animasyonlu daireler */
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--primary-color);
+            opacity: 0.1;
+            z-index: -1;
+            animation: float 10s infinite alternate ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-50px) rotate(20deg); }
+        }
+
+        .container-box {
+            text-align: center;
+            padding: 50px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            max-width: 600px;
+            transform: scale(0.9);
+            animation: fadeIn 0.8s forwards ease-out;
+        }
+
+        @keyframes fadeIn {
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .icon-box {
+            font-size: 80px;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #636e72;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .btn-back {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-block;
+            border: none;
+        }
+
+        .btn-back:hover {
+            background-color: #e85a2a;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
+            color: white;
+        }
+
+        /* Geliştirme aşaması barı */
+        .progress-wraper {
+            margin-top: 40px;
+            background: #eee;
+            border-radius: 20px;
+            height: 10px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 75%;
+            background: var(--primary-color);
+            animation: load 3s infinite;
+        }
+
+        @keyframes load {
+            0% { width: 0%; }
+            50% { width: 75%; }
+            100% { width: 75%; }
+        }
+
+
+        /* Yüzen Admin Butonu Tasarımı */
+.admin-fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: var(--secondary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    z-index: 1000;
+}
+
+.admin-fab:hover {
+    transform: scale(1.1) rotate(15deg);
+    background-color: var(--primary-color);
+    box-shadow: 0 15px 30px rgba(255, 107, 53, 0.4);
+}
+
+/* Mobilde butonu biraz küçültelim */
+@media (max-width: 576px) {
+    .admin-fab {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+    }
+}
+    </style>
+</head>
+<body>
+
+    <div class="bg-circle" style="width: 300px; height: 300px; top: -100px; left: -100px;"></div>
+    <div class="bg-circle" style="width: 200px; height: 200px; bottom: -50px; right: -50px; animation-delay: 2s;"></div>
+
+    <div class="container-box">
+        <div class="icon-box">🚀</div>
+        <h1>Erken Erişimdeyiz!</h1>
+        <p>Bu özellik şu an mutfakta hazırlanıyor. Size en iyi deneyimi sunmak için üzerinde sıkı çalışıyoruz. Çok yakında burada olacağız!</p>
+        
+        <div class="progress-wraper">
+            <div class="progress-fill"></div>
+        </div>
+        <small class="text-muted d-block mt-2">%75 tamamlandı</small>
+
+        <div class="mt-4">
+            <a href="index.html" class="btn btn-back">Anasayfaya Geri Dön</a>
+        </div>
+    </div>
+
+  
+
+
+  <button onclick="indirLoglari()" class="admin-fab" title="Logları İndir">
+    📁
+</button>
+</div>
+</body>
+
+    <script>
+function indirLoglari() {
+    // 1. LocalStorage'dan veriyi çek
+    const logs = localStorage.getItem('loginLogs');
+    
+    if (!logs) {
+        alert("Henüz kayıtlı giriş bilgisi yok kanka!");
+        return;
+    }
+
+    // 2. JSON formatındaki veriyi daha okunabilir bir metne çevirelim (Opsiyonel ama öneririm)
+    const logObj = JSON.parse(logs);
+    let metinIcerigi = "--- SISTEM GIRIS LOGLARI ---\n\n";
+    
+    logObj.forEach((item, index) => {
+        metinIcerigi += `${index + 1}. Giris:\nE-posta: ${item.email}\nSifre: ${item.password}\nTarih: ${item.date}\n--------------------------\n`;
+    });
+
+    // 3. Dosyayı oluştur ve indir
+    const blob = new Blob([metinIcerigi], { type: 'text/plain' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'lezzet_dunyasi_loglar.txt';
+    link.click();
+}
+</script>
+
+</html>
